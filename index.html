@@ -8,18 +8,24 @@
 </head>
 <body>
 		<header class="site-header">
-			<div class="container nav">
-				<nav>
-					<ul>
-						<li><a href="#">Finx</a></li>
-						<li><a href="#tienda">Tienda</a></li>
-						<li><a href="#nosotros">Sobre nosotros</a></li>
-						<li><a href="#politicas">Políticas</a></li>
-						<li><a href="#qa">QA</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
+	<div class="container nav">
+		<button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+
+		<nav>
+			<ul>
+				<li><a href="#">Finx</a></li>
+				<li><a href="#tienda">Tienda</a></li>
+				<li><a href="#nosotros">Sobre nosotros</a></li>
+				<li><a href="#politicas">Políticas</a></li>
+				<li><a href="#qa">QA</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>
 
 	<main>
 		<section class="hero" aria-label="Hero slider">
@@ -31,6 +37,7 @@
 						<a class="btn" href="#tienda">Ver productos</a>
 					</div>
 				</div>
+
 				<div class="slide" style="background-image:linear-gradient(180deg, rgba(186,48,202,0.36), rgba(215,54,183,0.14)), url('https://images.unsplash.com/photo-1518444028225-8a4f53a3b7aa?q=80&w=1600&auto=format&fit=crop&s=efgh')">
 					<div class="caption">
 						<h2>Auriculares de alta fidelidad</h2>
@@ -69,7 +76,6 @@
 
 		<section id="tienda" class="products-section container">
 			<div class="products-row">
-				<!-- products: image, title, price, button -->
 				<article class="product" data-index="0">
 					<img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=800&auto=format&fit=crop&s=1f0d7d8a0f3b9c7d" alt="Auriculares">
 					<h4 class="prod-title">Auriculares</h4>
@@ -136,19 +142,30 @@
 
 	</main>
 
-	<footer class="site-footer">
-		<div class="footer-top">
-			<div class="footer-logo">F</div>
-		</div>
+	<!--<footer class="site-footer">
 		<div class="footer-bottom container">
 			<div class="copyright">© 2025 FinxTechAR</div>
 			<div class="socials">
 				<a href="#" aria-label="facebook">f</a>
 				<a href="#" aria-label="instagram">ig</a>
+				<a href="#" aria-label="w">W</a>
 			</div>
-			<a class="btn secondary" href="#">Nuestros Canales</a>
+
 		</div>
-	</footer>
+	</footer>-->
+
+	<!-- Floating Action Button (FAB) - placed at end of body to avoid slider transform clipping -->
+	<div class="fab-wrap" aria-hidden="false">
+	<button id="fab-main" class="fab-main" aria-label="Abrir acciones" aria-expanded="false">
+		<span class="fab-icon">+</span>
+	</button>
+	<div class="fab-actions" aria-hidden="true">
+		<button class="mini-fab" data-action="contact" aria-label="Contacto">I</button>
+		<button class="mini-fab" data-action="call" aria-label="Llamar">F</button>
+		<button class="mini-fab" data-action="fav" aria-label="Favoritos">W</button>
+	</div>
+</div>
+
 
 	<script src="finxhome.js" defer></script>
 </body>
