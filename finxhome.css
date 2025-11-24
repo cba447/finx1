@@ -1,5 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap');
 
+.nav-toggle{
+	background:none;
+	border:none;
+	cursor:pointer;
+	padding:8px;
+	display:none; /* solo se verá en mobile */
+	margin-right:auto; /* empuja el nav al centro/der */
+}
+
+.nav-toggle span{
+	display:block;
+	width:22px;
+	height:2px;
+	margin:4px 0;
+	background:#fff;
+	border-radius:999px;
+	transition:transform .2s ease, opacity .2s ease;
+}
+
+/* animación a X cuando está abierto */
+body.nav-open .nav-toggle span:nth-child(1){
+	transform:translateY(6px) rotate(45deg);
+}
+body.nav-open .nav-toggle span:nth-child(2){
+	opacity:0;
+}
+body.nav-open .nav-toggle span:nth-child(3){
+	transform:translateY(-6px) rotate(-45deg);
+} 
 :root{
 	--p1: #d736b7; /* pink */
 	--p2: #ba30ca; /* magenta */
@@ -10,16 +39,62 @@
 	--bg: #0f1030;
 	--bg-gradient: linear-gradient(135deg,var(--p4) 0%,var(--p3) 35%,var(--p2) 65%,var(--p1) 100%);
 }
+*, *::before, *::after{
+	box-sizing: border-box;
+}
+
 
 html,body{
-	height:100%;
-	margin:0;
-	font-family:'Exo 2', Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-	line-height:1.6;
-	color: #fff;
-	background: var(--bg);
-	background-image: var(--bg-gradient);
-	background-attachment: fixed;
+ 	height:100%;
+ 	margin:0;
+ 	font-family:'Exo 2', Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+ 	line-height:1.6;
+ 	color: #fff;
+ 	/* base oscuro + sutil tint de la paleta (dominante: --p3) */
+ 	background: linear-gradient(135deg, rgba(140,42,238,0.06), rgba(75,35,165,0.04)), #07061a;
+ 	background-attachment: fixed;
+ 	position:relative;
+ 	overflow-x:hidden;
+}
+
+/* Neon-tech background (blobs + subtle tech grid) */
+body::before{
+	content:"";
+	position:fixed; inset:0; z-index:-3; pointer-events:none;
+	/* blobs using palette colors: dominant violet (--p3), accents from --p1 and --p4 */
+	background:
+		radial-gradient(720px 520px at 8% 18%, rgba(140,42,238,0.36), transparent 22%),
+		radial-gradient(520px 420px at 88% 74%, rgba(215,54,183,0.30), transparent 20%),
+		radial-gradient(420px 360px at 50% 48%, rgba(75,35,165,0.18), transparent 24%);
+	filter: blur(56px) saturate(140%);
+	mix-blend-mode: screen;
+	transform: translateZ(0);
+	animation: neonDrift 20s linear infinite;
+}
+
+/* subtle tech grid overlay to suggest 'gaming/tech' */
+body::after{
+	content:"";
+	position:fixed; inset:0; z-index:-2; pointer-events:none;
+	background-image:
+		linear-gradient(0deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+	background-size:140px 140px, 140px 140px;
+	opacity:0.06;
+	mix-blend-mode: overlay;
+}
+
+/* ensure main content and UI are above the background layers */
+main, header.site-header, .container, .site-footer{position:relative;z-index:1}
+
+@keyframes neonDrift{
+	0%{ transform: translate3d(-1.5%,0,0) }
+	50%{ transform: translate3d(1.5%,0,0) }
+	100%{ transform: translate3d(-1.5%,0,0) }
+}
+
+@media (prefers-reduced-motion: reduce){
+	body::before{ animation:none; filter:blur(56px) }
 }
 
 .container{max-width:1100px;margin:0 auto;padding:20px}
@@ -54,7 +129,7 @@ nav a:active{transform:translateY(-3px) scale(1.03)}
 /* Hero */
 .hero{position:relative;overflow:hidden}
 .slides{display:flex;transition:transform .7s cubic-bezier(.22,.9,.3,1)}
-.slide{min-width:100%;height:520px;background-size:cover;background-position:center;display:flex;align-items:flex-end}
+.slide{min-width:100%;height:520px;background-size:cover;background-position:center;display:flex;align-items:flex-end;position:relative}
 .slide .caption{width:48%;padding:28px;background:linear-gradient(180deg,transparent,rgba(6,3,18,0.2));border-radius:12px;margin:24px}
 .slide .caption h2{font-family:'Orbitron', 'Exo 2', sans-serif;font-size:36px;margin:0 0 8px;color:#fff;text-shadow:0 0 10px rgba(140,42,238,0.9)}
 .slide .caption p{color:rgba(255,255,255,0.9);margin:0 0 12px}
@@ -117,50 +192,432 @@ nav a:active{transform:translateY(-3px) scale(1.03)}
 .about-text p{color:rgba(255,255,255,0.92)}
 
 /* Why */
-.why{padding:56px 0;position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(6,3,18,0.06), rgba(6,3,18,0.12));}
+.why{padding:60px 0;position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(6,3,18,0.06), rgba(6,3,18,0.12));min-height:520px;display:flex;align-items:center}
 .why::before{content:"";position:absolute;right:-120px;top:-60px;width:900px;height:500px;background:radial-gradient(circle at 30% 30%, rgba(215,54,183,0.30), rgba(140,42,238,0.18) 40%, transparent 60%);filter:blur(60px);transform:rotate(18deg);opacity:0.95;z-index:0;pointer-events:none}
 .why::after{content:"";position:absolute;left:-140px;bottom:-40px;width:700px;height:360px;background:radial-gradient(circle at 70% 70%, rgba(186,48,202,0.18), rgba(75,35,165,0.12) 40%, transparent 60%);filter:blur(40px);opacity:0.85;z-index:0;pointer-events:none}
-.section-title{font-family:'Orbitron', 'Exo 2', sans-serif;font-size:52px;color:var(--p1);margin-bottom:22px;letter-spacing:1.6px;text-shadow:
+.section-title{font-family:'Orbitron', 'Exo 2', sans-serif;font-size:52px;color:var(--p1);margin:0 0 36px;letter-spacing:1.6px;text-shadow:
 	0 0 8px rgba(215,54,183,0.95),
 	0 0 20px rgba(140,42,238,0.85),
 	0 0 36px rgba(140,42,238,0.5);position:relative;z-index:1;text-align:center}
-.why-grid{display:flex;gap:28px;position:relative;z-index:1;justify-content:center;max-width:1100px;margin:0 auto}
-.why-item{flex:0 0 320px;background:linear-gradient(90deg, rgba(186,48,202,0.06), rgba(140,42,238,0.04));padding:22px;border-radius:14px;text-align:center}
+.why > .container{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;width:100%}
+.why-grid{display:flex;gap:28px;position:relative;z-index:1;justify-content:center;max-width:1100px;margin:0 auto;margin-top:28px}
+.why-item{flex:0 0 320px;background:transparent;padding:22px;border-radius:14px;text-align:center}
 .why-item .icon{width:84px;height:84px;border-radius:14px;background:linear-gradient(90deg,var(--p1),var(--p3));display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:30px}
 .why-item h4{margin:10px 0 10px;font-family:'Orbitron', 'Exo 2', sans-serif;font-size:20px;color:var(--p2);letter-spacing:0.8px;text-shadow:0 0 10px rgba(186,48,202,0.75)}
 .why-item p{color:rgba(255,255,255,0.92);font-size:15px;line-height:1.45}
 
-/* Footer */
-.site-footer{background:#070607;color:#fff;padding:36px 0;margin-top:48px}
-.site-footer .footer-top{text-align:center;padding:16px}
-.site-footer .footer-logo{width:84px;height:84px;border-radius:12px;background:linear-gradient(135deg,var(--p2),var(--p3));margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:32px}
-.site-footer .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;margin-top:16px}
+/* Footer 
+.site-footer{background:transparent;color:#fff;padding:24px 0 18px;margin-top:0;border-top:0;position:relative}
+.site-footer .footer-top{text-align:center;padding:6px 0 12px;position:relative;z-index:1}
+.site-footer .footer-logo{width:96px;height:96px;border-radius:12px;background:linear-gradient(135deg,var(--p2),var(--p3));margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 18px 50px rgba(140,42,238,0.28);text-shadow:0 0 10px rgba(215,54,183,0.7);font-weight:700}
+
+/* Floating Action Button (FAB) */
+.fab-wrap{
+	position:fixed;
+	right:20px;
+	bottom:20px;
+	/* bring FAB above most UI layers */
+	z-index:100001;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	pointer-events:auto;
+}
+.fab-main{
+	width:76px;
+	height:76px;
+	border-radius:50%;
+	border:none;
+	cursor:pointer;
+	display:inline-grid;
+	place-items:center;
+	background:linear-gradient(135deg,var(--p1),var(--p2));
+	color:#fff;
+	box-shadow:0 6px 20px rgba(139,30,238,0.28), 0 0 18px var(--p2);
+	font-size:34px;
+	z-index:100002;
+	pointer-events:auto;
+	transition:transform .18s ease, box-shadow .18s ease;
+}
+.fab-icon{font-size:40px}
+.fab-main:active{transform:scale(.96)}
+.fab-icon{display:inline-block;transform:rotate(0);transition:transform .2s ease}
+.fab-wrap.open .fab-icon{transform:rotate(45deg)}
+
+.fab-actions{
+	/* make the actions span the full width of the fab-wrap so children can center with left:50% */
+	position:absolute;
+	left:0;right:0;bottom:0;
+	/* reserve vertical space so hovering/moving between mini-fabs doesn't accidentally leave the interactive area */
+	height:280px;width:100%;
+	display:block;overflow:visible;
+	pointer-events:none; /* when closed, let clicks pass through; enabled when open */
+}
+
+/* enable pointer events on the action area only when the FAB is open */
+.fab-wrap.open .fab-actions{ pointer-events:auto }
+.mini-fab{
+	position:absolute;
+ 	left:50%;
+ 	bottom:2px;
+ 	width:48px;height:48px;
+ 	border-radius:50%;
+ 	border:none;
+ 	margin-bottom:8px;
+ 	background:linear-gradient(135deg,var(--p3),var(--p4));
+ 	color:#fff;
+ 	box-shadow:0 6px 18px rgba(79,34,165,0.22), 0 0 12px var(--p3);
+	/* use a CSS var for the target translateY so hover can adjust relative to it */
+	--ty: -86px;
+	transform:translateX(-50%) translateY(0) scale(.6);
+ 	opacity:0;
+ 	transition:transform .28s cubic-bezier(.2,.9,.2,1), opacity .2s ease;
+ 	display:grid;place-items:center;font-size:18px;cursor:pointer;z-index:1201;
+	pointer-events:auto;
+}
+
+/* per-button primary color variable (used on hover to invert colors) */
+.mini-fab[data-action="contact"]{ --fab-color: var(--p1); }
+.mini-fab[data-action="call"]{ --fab-color: var(--p3); }
+.mini-fab[data-action="fav"]{ --fab-color: var(--p2); }
+
+/* Hover / focus states for mini buttons: invert colors to white bg + colored glyph.
+	 Use calc on --ty so we shift relative to each button's stacked position instead
+	 of forcing a fixed translateY that moves them all down. */
+.mini-fab:hover, .mini-fab:focus{
+	background:#fff;
+	color:var(--fab-color);
+	border:2px solid rgba(0,0,0,0.06);
+	box-shadow:0 18px 48px rgba(0,0,0,0.28), 0 0 20px rgba(0,0,0,0.0);
+	outline:none;
+}
+.mini-fab:active{transform:translateX(-50%) translateY(calc(var(--ty) - 4px)) scale(.98) !important}
+.mini-fab:focus{box-shadow:0 20px 60px rgba(0,0,0,0.18)}
+
+
+/* keep mini-fabs visible and stable while hovered or focused*/
+.fab-wrap.open .mini-fab{opacity:1;transform:translateX(-50%) translateY(var(--ty)) scale(1)}
+.fab-wrap.open .mini-fab:nth-child(1){--ty: -86px}
+.fab-wrap.open .mini-fab:nth-child(2){--ty: -152px}
+.fab-wrap.open .mini-fab:nth-child(3){--ty: -218px}
+.fab-wrap.open .mini-fab{transform:translateX(-50%) translateY(var(--ty)) scale(1)}
+
+/* FINAL OVERRIDE: soften the hover/focus visual — keep position locked, but make
+	 the color inversion less aggressive (near-white bg + subtle shadow + smooth transition) */
+.fab-wrap.open .mini-fab:hover,
+.fab-wrap.open .mini-fab:focus,
+.mini-fab:hover,
+.mini-fab:focus,
+.mini-fab:active,
+.mini-fab.mini-active {
+	/* keep the same stacked position (no jumps) */
+	transform: translateX(-50%) translateY(var(--ty)) scale(1) !important;
+	/* softer inversion */
+	background: rgba(255,255,255,0.94) !important;
+	color: var(--fab-color) !important;
+	border:1px solid rgba(0,0,0,0.06) !important;
+	box-shadow: 0 8px 24px rgba(0,0,0,0.18) !important;
+	transition: background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease !important;
+}
+
+
+/* visual feedback when clicked */
+.mini-fab.mini-active{transform:translateX(-50%) translateY(-6px) scale(.92) !important;box-shadow:0 8px 28px rgba(140,42,238,0.34) inset}
+
+/* favorited state example */
+.mini-fab.favorited{background:linear-gradient(135deg,var(--p1),var(--p2));box-shadow:0 8px 32px rgba(215,54,183,0.28);}
+
+/* small screens tweak */
+@media (max-width:480px){
+	.fab-main{width:56px;height:56px}
+	.mini-fab{width:44px;height:44px}
+}
+.site-footer .footer-bottom{display:flex;align-items:center;justify-content:center;gap:28px;padding:12px 20px;margin-top:6px;position:relative;z-index:1}
 .site-footer .socials{display:flex;gap:12px}
-.site-footer .socials a{width:36px;height:36px;border-radius:8px;background:transparent;color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.btn.secondary{background:linear-gradient(90deg,var(--p3),var(--p1));padding:8px 16px}
+.site-footer .socials a{width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04);transition:all .16s ease;font-weight:600}
+.site-footer .socials a:hover{background:linear-gradient(90deg,var(--p1),var(--p3));box-shadow:0 14px 48px rgba(215,54,183,0.28);transform:translateY(-6px)}
+.site-footer .copyright{opacity:0.95;font-weight:600;letter-spacing:0.6px}
+.btn.secondary{background:linear-gradient(90deg,var(--p3),var(--p1));padding:10px 18px;text-shadow:0 0 8px rgba(215,54,183,0.45);border-radius:12px;box-shadow:0 10px 30px rgba(140,42,238,0.12)}*/
+
+/*@keyframes pulse{0%{transform:translateX(-50%) scale(0.98);opacity:0.9}50%{transform:translateX(-50%) scale(1.02);opacity:1}100%{transform:translateX(-50%) scale(0.98);opacity:0.9}}
 
 /* Utility */
 .text-muted{color:rgba(255,255,255,0.75)}
 
-/* Responsive */
-@media (max-width:900px){
-	.hero-inner{flex-direction:column;text-align:center}
-	.logo-hex{width:160px;height:160px;font-size:42px;margin:0 auto}
-	.products-row{flex-direction:column;gap:14px}
-	.product{width:100%}
-	.why-grid{flex-direction:column;align-items:center}
-	.about-inner{flex-direction:column}
-	.site-footer .footer-bottom{flex-direction:column;gap:12px}
-	/* reduce header height on smaller screens to save vertical space */
-	header.site-header{height:72px}
-	main{padding-top:calc(72px + 12px)}
-	/* slider smaller on tablets */
-	.slide{height:360px}
+/* --------- RESPONSIVE LAYOUT --------- */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 900px){
+	/* contenedor un poco más angosto */
+	.container{
+		padding:16px 16px;
+	}
+
+	/* header un poco más bajo */
+	header.site-header{
+		height:72px;
+	}
+	main{
+		padding-top:72px;
+	}
+
+	/* nav más compacto */
+	nav ul{
+		gap:14px;
+	}
+	nav a{
+		padding:8px 10px;
+		font-size:0.9rem;
+	}
+
+	/* slider más bajo y caption más ancha */
+	.slide{
+		height:380px;
+		align-items:flex-end;
+	}
+	.slide .caption{
+		width:70%;
+		margin:18px;
+	}
+
+	/* filas principales en columna */
+	.products-row{
+		flex-wrap:wrap;
+	}
+	.product{
+		width:48%;
+	}
+
+	.about-inner{
+		flex-direction:column;
+		text-align:center;
+	}
+	.about-image img{
+		max-width:260px;
+		width:100%;
+	}
+	.about-text{
+		max-width:100%;
+	}
+
+	.why{
+		min-height:auto;
+		padding:48px 0;
+	}
+	.why-grid{
+		flex-wrap:wrap;
+	}
 }
 
-@media (max-width:480px){
-	.hero-right h1{font-size:28px}
-	.logo-hex{width:140px;height:140px}
-	.slide{height:300px}
-	.slide .caption{width:90%;margin:12px}
+/* Celulares */
+@media (max-width: 890px){
+	/* header más compacto todavía */
+	/* mostramos el botón hamburguesa */
+	.nav{
+		justify-content:space-between;
+	}
+	.nav-toggle{
+		display:block;
+	}
+
+	/* el nav pasa a ser un panel desplegable */
+	header.site-header nav{
+		position:fixed;
+		top:64px;           /* misma altura que el header en mobile */
+		left:0;
+		right:0;
+		background:rgba(7,6,26,0.96);
+		backdrop-filter:blur(20px);
+		-webkit-backdrop-filter:blur(20px);
+		transform:translateY(-120%);
+		opacity:0;
+		pointer-events:none;
+		transition:transform .2s ease, opacity .2s ease;
+		padding:8px 0 16px;
+	}
+
+	body.nav-open header.site-header nav{
+		transform:translateY(0);
+		opacity:1;
+		pointer-events:auto;
+	}
+
+	header.site-header nav ul{
+		flex-direction:column;
+		align-items:center;
+		gap:8px;
+		padding:8px 16px;
+	}
+
+	header.site-header nav a{
+		padding:8px 12px;
+		display:block;
+		width:100%;
+		text-align:center;
+		border-radius:10px;
+	}
+	header.site-header{
+		height:64px;
+	}
+	main{
+		padding-top:64px;
+	}
+
+	.container{
+		padding:16px 14px;
+	}
+
+	/* nav: dejar que salte a doble línea si hace falta */
+	nav ul{
+		gap:10px;
+		flex-wrap:wrap;
+		justify-content:center;
+	}
+	nav a{
+		padding:6px 8px;
+		font-size:0.85rem;
+	}
+
+	/* hero en mobile */
+	.slide{
+		height:320px;
+		align-items:flex-end;
+	}
+	.slide .caption{
+		width:90%;
+		margin:12px auto 18px;
+		padding:16px;
+		text-align:left;
+	}
+	.slide .caption h2{
+		font-size:24px;
+	}
+	.slide .caption p{
+		font-size:0.95rem;
+	}
+
+	.hero-controls{
+		padding:0 4px;
+	}
+	.hero-controls button{
+		width:36px;
+		height:36px;
+		font-size:16px;
+	}
+	.indicators{
+		bottom:12px;
+	}
+
+	/* productos: 1 por fila */
+	.products-section{
+		padding:28px 16px;
+	}
+
+	.products-row{
+		display:grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap:16px;
+	}
+
+	.product{
+		width:100%;   /* el grid ya controla el ancho */
+	}
+
+	.product img{
+		height:100px; /* un poco más bajo para mobile, si querés */
+	}
+
+	/* about en columna */
+	.about{
+		padding:32px 16px;
+	}
+	.about-inner{
+		flex-direction:column;
+		text-align:center;
+		gap:18px;
+	}
+	.about-text h2{
+		font-size:26px;
+	}
+	.about-text p{
+		font-size:0.95rem;
+	}
+
+	/* why en columna */
+	.section-title{
+		font-size:32px;
+		margin-bottom:24px;
+	}
+	.why-grid{
+		flex-direction:column;
+		align-items:center;
+		gap:18px;
+	}
+	.why-item{
+		flex:1 1 100%;
+		max-width:380px;
+	}
+	.products-section{
+		padding: 28px 20px;   /* margen a izquierda y derecha */
+	}
+
+	.products-row{
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px;            /* separación entre cajas */
+	}
+
+	.product{
+		width: 100%;          /* ahora sí, sin salirse gracias al box-sizing */
+	}
+
+	.product img{
+		height: 100px;
+		object-fit: contain;
+	}
+
+	/* fab un toque más chico en estas pantallas también */
+	.fab-main{
+		width:60px;
+		height:60px;
+		font-size:30px;
+	}
+	.fab-icon{
+		font-size:32px;
+	}
+	.mini-fab{
+		width:44px;
+		height:44px;
+		font-size:16px;
+	}
 }
+
+/* Extra pequeño (ya muy celular chico) */
+@media (max-width:480px){
+	/* reforzamos algunas cosas solo en XS */
+	
+	.products-row{
+		grid-template-columns: 1fr;
+	}
+}
+	.slide{
+		height:300px;
+	}
+	.slide .caption{
+		width:92%;
+		margin:10px auto 16px;
+		padding:14px;
+	}
+
+	.about-text h2{
+		font-size:22px;
+	}
+
+	.section-title{
+		font-size:26px;
+	}
+
+	.products-section{
+		padding:24px 14px;
+	}
+
